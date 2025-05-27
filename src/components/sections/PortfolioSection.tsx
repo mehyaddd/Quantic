@@ -4,7 +4,7 @@ import GallerySlider from '../gallery/GallerySlider';
 import OptimizedGallerySlider from '../gallery/OptimizedGallerySlider';
 import VideoPlayer from '../ui/VideoPlayer';
 import { gsap, gsapManager } from '../../utils/gsapManager';
-import { isLowEndDeviceQuickCheck } from '../../utils/performanceDetector';
+import { isLowEndDeviceQuickCheck } from '../../../utils/performanceDetector';
 import styles from '../../styles/components/portfolio.module.css';
 
 // Helper function to check if device is mobile
@@ -126,32 +126,32 @@ const PortfolioSection: React.FC = () => {
         splitTitle = new SplitType(titleRef.current, { types: ["chars", "words"] });
     
         // Set initial states for title characters
-    if (splitTitle.chars) {
-      gsap.set(splitTitle.chars, { 
+        if (splitTitle.chars) {
+          gsap.set(splitTitle.chars, { 
             opacity: 1,
             y: 0,
             rotateX: 0,
-        transformOrigin: "50% 50% -50"
-      });
-    }
+            transformOrigin: "50% 50% -50"
+          });
+        }
     
-      // Create scroll-synchronized animation for title
-      if (splitTitle.chars) {
-        gsapManager.createAnimation('portfolio-title-chars', splitTitle.chars, {
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 80%", 
-            end: "top 30%",
-            scrub: 0.5,
+        // Create scroll-synchronized animation for title
+        if (splitTitle.chars) {
+          gsapManager.createAnimation('portfolio-title-chars', splitTitle.chars, {
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: "top 80%", 
+              end: "top 30%",
+              scrub: 0.5,
               toggleActions: "play none none reverse",
-          },
-          opacity: 1,
-          y: 0,
-          rotateX: 0,
-          stagger: 0.02,
-          ease: "power2.out",
-        });
-      }
+            },
+            opacity: 1,
+            y: 0,
+            rotateX: 0,
+            stagger: 0.02,
+            ease: "power2.out",
+          });
+        }
       } catch (error) {
         console.error("Error setting up animations:", error);
       }
@@ -175,7 +175,7 @@ const PortfolioSection: React.FC = () => {
     return () => {
       if (splitTitle) {
         try {
-      splitTitle.revert();
+          splitTitle.revert();
         } catch (error) {
           console.error("Error reverting split text:", error);
         }
@@ -211,7 +211,7 @@ const PortfolioSection: React.FC = () => {
             }}
           >
             Reel Works
-        </h2>
+          </h2>
           <p className={styles.portfolioSubtitle}>Click on any reel to play video</p>
         </div>
       </div>
