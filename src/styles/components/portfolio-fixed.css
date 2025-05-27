@@ -1,0 +1,260 @@
+/* Portfolio Section Styles */
+.portfolioSection {
+  padding: 8rem 0;
+  position: relative;
+  overflow: hidden;
+  transition: opacity 0.6s ease;
+  background-color: #0a0a0a;
+  opacity: 1;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+}
+
+/* Grid container with center origin - copied from services section */
+.gridContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.9) 50%,
+    rgba(0, 0, 0, 1) 100%
+  );
+}
+
+/* Fading mask for grid edges */
+.gridContainer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: 
+    radial-gradient(
+      circle at center,
+      transparent 0%,
+      rgba(0, 0, 0, 0.3) 50%,
+      rgba(0, 0, 0, 0.8) 100%
+    );
+}
+
+/* Vertical lines expanding from center - بدون انیمیشن */
+.verticalLines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 0;
+}
+
+/* Generate vertical lines */
+.verticalLines::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-image: 
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(64, 224, 208, 0.15) 0%,
+      transparent 50%
+    ),
+    repeating-linear-gradient(
+    to right,
+      transparent 0px,
+      transparent 40px,
+      rgba(64, 224, 208, 0.1) 40px,
+      rgba(64, 224, 208, 0.1) 41px,
+      transparent 41px,
+      transparent 80px
+  );
+  opacity: 0.3;
+}
+
+/* Horizontal lines expanding from center - بدون انیمیشن */
+.horizontalLines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  z-index: 0;
+}
+
+/* Generate horizontal lines */
+.horizontalLines::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-image: 
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 105, 180, 0.15) 0%,
+      transparent 50%
+    ),
+    repeating-linear-gradient(
+    to bottom,
+      transparent 0px,
+      transparent 40px,
+      rgba(255, 105, 180, 0.1) 40px,
+      rgba(255, 105, 180, 0.1) 41px,
+      transparent 41px,
+      transparent 80px
+  );
+  opacity: 0.3;
+}
+
+.portfolioSection.visible {
+  opacity: 1;
+}
+
+.portfolioContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.portfolioHeader {
+  text-align: left;
+  margin-bottom: 4rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 10;
+}
+
+.portfolioTitle {
+  font-size: 2.5rem;
+  font-weight: 500;
+  color: #ffffff;
+  text-align: left;
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  z-index: 10;
+}
+
+.portfolioTitle::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.portfolioTitle:hover::before {
+  opacity: 1;
+}
+
+@media (min-width: 768px) {
+  .portfolioSection {
+    padding: 12rem 0;
+  }
+
+  .portfolioContainer {
+    padding: 0 2rem;
+  }
+
+  .portfolioHeader {
+    margin-bottom: 3rem;
+  }
+
+  .portfolioTitle {
+    font-size: 6rem;
+    font-weight: 300;
+    color: #ffffff;
+    /* رنگ متن به سفید تغییر داده شده */
+  }
+}
+
+@media (min-width: 1024px) {
+  .portfolioTitle {
+    font-size: 7rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .portfolioTitle {
+    font-size: 8rem;
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 767px) {
+  .portfolioSection {
+    padding: 4rem 0;
+    min-height: auto;
+  }
+
+  .portfolioContainer {
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .portfolioHeader {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+  }
+
+  .portfolioTitle {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-align: center;
+    margin: 0 auto 2rem;
+    padding: 0;
+    line-height: 1.2;
+    position: relative;
+    z-index: 10;
+    background: none;
+    text-shadow: none;
+    transform: none;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .portfolioTitle::before,
+  .portfolioTitle::after {
+    display: none;
+  }
+}
+
+.gallerySlider {
+  width: 100%;
+  overflow: hidden;
+  margin-top: 1rem;
+} 

@@ -1,0 +1,381 @@
+/* Portfolio Section Styles */
+.portfolioSection {
+  padding: 8rem 0 0 0;
+  position: relative;
+  overflow: hidden;
+  transition: opacity 0.6s ease;
+  background-color: transparent;
+  opacity: 1;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Grid container with center origin - copied from services section */
+.gridContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+/* Fading mask for grid edges */
+.gridContainer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: transparent;
+}
+
+/* Vertical lines expanding from center - اضافه شده بدون انیمیشن */
+.verticalLines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 0;
+}
+
+/* Generate vertical lines */
+.verticalLines::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-image: 
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(64, 224, 208, 0.15) 0%,
+      transparent 50%
+    ),
+    repeating-linear-gradient(
+    to right,
+      transparent 0px,
+      transparent 40px,
+      rgba(64, 224, 208, 0.1) 40px,
+      rgba(64, 224, 208, 0.1) 41px,
+      transparent 41px,
+      transparent 80px
+  );
+  opacity: 0.3;
+}
+
+/* Horizontal lines expanding from center - اضافه شده بدون انیمیشن */
+.horizontalLines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  z-index: 0;
+}
+
+/* Generate horizontal lines */
+.horizontalLines::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-image: 
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 105, 180, 0.15) 0%,
+      transparent 50%
+    ),
+    repeating-linear-gradient(
+    to bottom,
+      transparent 0px,
+      transparent 40px,
+      rgba(255, 105, 180, 0.1) 40px,
+      rgba(255, 105, 180, 0.1) 41px,
+      transparent 41px,
+      transparent 80px
+  );
+  opacity: 0.3;
+}
+
+.portfolioSection.visible {
+  opacity: 1;
+}
+
+.portfolioContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.portfolioHeader {
+  text-align: left;
+  margin-bottom: 4rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 10;
+}
+
+/* Critical style for portfolio title to ensure visibility */
+.portfolioTitle {
+  font-size: 2.5rem;
+  font-weight: 500;
+  color: #ffffff !important;
+  text-align: left;
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  z-index: 10;
+  opacity: 1 !important;
+  visibility: visible !important;
+  text-shadow: 0 0 1px rgba(255,255,255,0.5);
+}
+
+.portfolioTitle::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.portfolioTitle:hover::before {
+  opacity: 1;
+}
+
+/* Style for subtitle */
+.portfolioSubtitle {
+  font-size: 1rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: -1rem;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Full-width slider container */
+.sliderFullWidth {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+}
+
+.gallerySlider {
+  width: 100%;
+  overflow: hidden;
+  margin-top: 0;
+  padding: 0;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .portfolioSection {
+    padding: 12rem 0 0 0;
+  }
+
+  .portfolioContainer {
+    padding: 0 2rem;
+  }
+
+  .portfolioHeader {
+    margin-bottom: 6rem;
+  }
+
+  .portfolioTitle {
+    font-size: 6rem;
+    font-weight: 300;
+    color: #ffffff !important;
+  }
+
+  .portfolioSubtitle {
+    font-size: 1.1rem;
+    margin-top: -2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .portfolioTitle {
+    font-size: 7rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .portfolioTitle {
+    font-size: 8rem;
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 767px) {
+  .portfolioSection {
+    padding: 4rem 0 0 0;
+    min-height: auto;
+  }
+  
+  .portfolioContainer {
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .portfolioHeader {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 0;
+  }
+
+  .portfolioTitle {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #ffffff !important;
+    text-align: center;
+    margin: 0 auto 1.5rem;
+    padding: 0;
+    line-height: 1.2;
+    position: relative;
+    z-index: 10;
+    background: none;
+    text-shadow: none;
+    transform: none;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    width: 100%;
+  }
+
+  .portfolioTitle::before,
+  .portfolioTitle::after {
+    display: none;
+  }
+  
+  /* Ensure slider is full-width on mobile */
+  .sliderFullWidth {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+  }
+
+  .portfolioSubtitle {
+    font-size: 0.9rem;
+    text-align: center;
+  width: 100%;
+    margin-top: -1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Swipe indicator for mobile */
+  .sliderFullWidth::after {
+    content: none;
+  }
+
+  @keyframes swipeHint {
+    0% {
+      opacity: 0.3;
+      transform: translateX(-70%);
+    }
+    50% {
+      opacity: 0.7;
+      transform: translateX(-30%);
+    }
+    100% {
+      opacity: 0.3;
+      transform: translateX(-70%);
+    }
+  }
+
+  /* Swipe guide text */
+  .swipeGuide {
+    display: none;
+  }
+
+  @keyframes fadeInOut {
+    0%, 100% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  /* Touch swipe indicator */
+  .sliderFullWidth::before {
+    content: "";
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 30px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='none' stroke='rgba(255,255,255,0.9)' stroke-width='1.5'%3E%3Cpath d='M9 11.24V7.5C9 6.12 10.12 5 11.5 5S14 6.12 14 7.5v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.43-.72c-.08-.01-.15-.03-.24-.03-.31 0-.59.13-.79.33l-.79.8 4.94 4.94c.27.27.65.44 1.06.44h6.79c.75 0 1.33-.55 1.44-1.28l.75-5.27c.01-.07.02-.14.02-.2 0-.62-.38-1.16-.91-1.38z' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 30px 30px;
+    opacity: 0.8;
+    z-index: 20;
+    animation: fingerSwipe 2s infinite ease-in-out;
+    pointer-events: none;
+  }
+
+  @keyframes fingerSwipe {
+    0% {
+      transform: translate(-80%, 0);
+      opacity: 0.4;
+    }
+    40% {
+      transform: translate(-20%, 0);
+      opacity: 0.8;
+    }
+    60% {
+      transform: translate(-20%, 0);
+      opacity: 0.8;
+    }
+    100% {
+      transform: translate(-80%, 0);
+      opacity: 0.4;
+    }
+  }
+
+  /* اضافه کردن کلاس برای حالت فعال اسلایدر */
+  .sliderActive::before {
+    display: none;
+  }
+}

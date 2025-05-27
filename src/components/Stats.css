@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&display=swap');
+
+.stats-section {
+  position: relative;
+  overflow: hidden;
+  background: #111;
+  min-height: 40vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stats-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 0);
+  background-size: 30px 30px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.scrolling-container {
+  width: 100%;
+  overflow: hidden;
+  padding: 2rem 0;
+  position: relative;
+}
+
+/* CD-like holographic effect */
+.scrolling-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.05) 75%,
+    transparent 100%
+  );
+  background-size: 200% 200%;
+  animation: holographic-shine 5s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes holographic-shine {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 200% 200%;
+  }
+}
+
+.scrolling-text {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900;
+  background: linear-gradient(
+    to right,
+    #ff8a00 0%, 
+    #ffa149 10%,
+    #ffb76b 20%,
+    #ffc988 30%, 
+    #ffe0b2 40%,
+    #f8d5a3 50%, 
+    #e8c496 60%, 
+    #d9b589 70%, 
+    #c9a67c 80%, 
+    #b5966e 90%, 
+    #ff8a00 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  padding: 1rem 0;
+  white-space: nowrap;
+  display: inline-block;
+  animation: holographic-text 10s linear infinite;
+}
+
+@keyframes holographic-text {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.scrolling-text .highlight {
+  background: linear-gradient(
+    to right,
+    #ffb76b 0%,
+    #ffd8a8 20%,
+    #ffe0b2 50%, 
+    #ffb76b 80%, 
+    #ff8a00 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  z-index: 1;
+  animation: holographic-highlight 5s linear infinite;
+}
+
+@keyframes holographic-highlight {
+  0% {
+    background-position: 0% center;
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    background-position: 200% center;
+    filter: hue-rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-section {
+    min-height: 30vh;
+  }
+  
+  .scrolling-text {
+    font-size: 3.5rem;
+    padding: 0.5rem 0;
+  }
+} 

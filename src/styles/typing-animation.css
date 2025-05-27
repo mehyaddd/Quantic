@@ -1,0 +1,39 @@
+/* Typing Animation Styles */
+
+.typing-container {
+  position: relative;
+  width: 100%;
+  min-height: 1.5em;
+}
+
+.typing-text-wrapper {
+  position: relative;
+  width: 100%;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+/* Add height-preserving class */
+.text-height-preserving {
+  position: relative;
+}
+
+.text-height-preserving::before {
+  content: attr(data-full-text);
+  visibility: hidden;
+  display: block;
+  height: 0;
+  overflow: hidden;
+}
+
+.typing-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  animation: blink 0.7s infinite;
+  vertical-align: middle;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+} 

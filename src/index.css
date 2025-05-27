@@ -1,0 +1,211 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark mode color variables as default */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 100%;
+    --accent: 0 0% 20%;
+    --accent-foreground: 0 0% 100%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 65%;
+    
+    /* Z-index system - Consistent layering system */
+    --z-background: 1;
+    --z-background-decorations: 5;
+    --z-content-base: 10;
+    --z-content-raised: 20;
+    --z-content-high: 30;
+    --z-section: 40;
+    --z-section-content: 50;
+    --z-overlay: 100;
+    --z-modal: 200;
+    --z-toast: 300;
+    --z-tooltip: 400;
+    --z-effects: 500;
+  }
+  
+  /* Keep dark class for compatibility with Tailwind dark mode */
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 100%;
+    --accent: 0 0% 20%;
+    --accent-foreground: 0 0% 100%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 65%;
+  }
+
+  html {
+    @apply scroll-smooth dark;
+    width: 100%;
+    overflow-x: hidden;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans transition-colors duration-300;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+    line-height: 120%;
+  }
+  
+  p, li, span {
+    line-height: 150%;
+  }
+
+  ::selection {
+    @apply bg-primary text-white;
+  }
+
+  /* Project cards visibility fix */
+  .project-item {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: block !important;
+    z-index: var(--z-content-raised) !important;
+    position: relative !important;
+  }
+  
+  .project-item * {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* CTA section visibility fix */
+  section[class*="bg-primary"] {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: block !important;
+    position: relative !important;
+    z-index: var(--z-section) !important;
+  }
+  
+  section[class*="bg-primary"] * {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* CTA text specific fix */
+  section[class*="bg-primary"] p {
+    color: white !important;
+    opacity: 1 !important;
+    text-shadow: 0 0 1px rgba(255,255,255,0.5) !important;
+    font-weight: 500 !important;
+    z-index: var(--z-section-content) !important;
+    position: relative !important;
+  }
+  
+  /* Direct CTA text class */
+  .cta-text {
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    font-weight: 500 !important;
+    text-shadow: 0 0 1px rgba(255,255,255,0.5) !important;
+    z-index: var(--z-section-content) !important;
+    position: relative !important;
+    letter-spacing: 0.01em !important;
+  }
+
+  .custom-cursor {
+    @apply pointer-events-none fixed h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary transition-all duration-100 ease-out;
+    z-index: var(--z-overlay);
+    mix-blend-mode: difference;
+  }
+
+  .custom-cursor-text {
+    @apply h-16 w-16 bg-white text-black flex items-center justify-center text-xs font-medium;
+    mix-blend-mode: difference;
+  }
+
+  .custom-cursor-hidden {
+    @apply opacity-0;
+  }
+
+  .section-padding {
+    @apply py-20 md:py-28 lg:py-32;
+  }
+
+  .container-padding {
+    @apply px-4 md:px-8 lg:px-12;
+  }
+
+  .reveal-text {
+    @apply overflow-hidden;
+  }
+
+  .reveal-text span {
+    @apply inline-block translate-y-full opacity-0;
+  }
+
+  /* Enhanced animations */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .scale-fade {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .scale-fade.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .slide-left {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .slide-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .slide-right {
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .slide-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Glass effect */
+  .glass {
+    @apply backdrop-blur-lg bg-black/10 border-white/10;
+  }
+
+  /* Text gradient */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-foreground to-primary;
+  }
+}
