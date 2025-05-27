@@ -55,8 +55,8 @@ const Timeline: React.FC = () => {
     setCanvasSize();
     window.addEventListener('resize', setCanvasSize);
     
-    // Prepare image sequence
-    const frameCount = 255;
+    // Prepare image sequence - adjusted to skip frame 247
+    const frameCount = 254;
     const images: HTMLImageElement[] = [];
     const ctx = canvas.getContext('2d');
     
@@ -91,15 +91,16 @@ const Timeline: React.FC = () => {
         }
       };
       
-      // Load all images in parallel
+      // Load all images in parallel, skipping frame 247
       for (let i = 0; i < frameCount; i++) {
+        const frameNumber = i >= 246 ? i + 2 : i + 1; // Skip frame 247 by incrementing frame numbers after 246
         const img = new Image();
         img.crossOrigin = "anonymous";
-        img.src = `/images/paper/${i + 1}.webp`;
+        img.src = `/images/paper/${frameNumber}.webp`;
         
         img.onload = updateLoadingProgress;
         img.onerror = () => {
-          console.error(`Failed to load image: ${i + 1}.webp`);
+          console.error(`Failed to load image: ${frameNumber}.webp`);
           updateLoadingProgress();
         };
         
@@ -262,4 +263,4 @@ const Timeline: React.FC = () => {
   );
 };
 
-export default Timeline; 
+export default Timeline;
