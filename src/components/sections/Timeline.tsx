@@ -81,7 +81,7 @@ const Timeline: React.FC = () => {
       
       // Load images sequentially to prevent overwhelming the browser
       for (let i = 0; i < frameCount; i++) {
-        const frameNumber = i >= 4 ? i + 1 : i + 1; // Skip frame 5 by adjusting the index
+        const frameNumber = i >= 4 ? i + 2 : i + 1; // Skip frame 5 by adding 2 after index 4
         const img = new Image();
         img.crossOrigin = "anonymous";
         
