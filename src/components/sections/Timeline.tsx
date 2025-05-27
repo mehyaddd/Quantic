@@ -81,28 +81,51 @@ const Timeline: React.FC = () => {
       
       // Load images sequentially to prevent overwhelming the browser
       for (let i = 0; i < frameCount; i++) {
-        const frameNumber = i >= 3 ? i + 2 : i + 1; // Skip frame 5
+        const frameNumber = i >= 4 ? i + 1 : i + 1; // Skip frame 5 by adjusting the index
         const img = new Image();
         img.crossOrigin = "anonymous";
-        img.src = `/images/paper/${frameNumber}.webp`;
         
         // Create a promise for each image load
         await new Promise<void>((resolve) => {
-          img.onload = () => {
-            images[i] = img;
-            updateLoadingProgress();
-            resolve();
-          };
-          img.onerror = () => {
-            console.warn(`Failed to load image: ${frameNumber}.webp, retrying with PNG`);
-            // Fallback to PNG if WebP fails
-            img.src = `/images/paper/${frameNumber}.png`;
-            img.onerror = () => {
-              console.error(`Failed to load image: ${frameNumber}.png`);
+          const tryLoad = (extension: string) => {
+            img.src = `/images/paper/${frameNumber}.${extension}`;
+            
+            img.onload = () => {
+              images[i] = img;
               updateLoadingProgress();
               resolve();
             };
+            
+            img.onerror = () => {
+              if (extension === 'webp') {
+                // Try PNG if WebP fails
+                tryLoad('png');
+              } else {
+                console.error(`Failed to load image: ${frameNumber}.${extension}`);
+                // Create a placeholder for failed images
+                const canvas = document.createElement('canvas');
+                canvas.width = 1920;
+                canvas.height = 3200;
+                const ctx = canvas.getContext('2d');
+                if (ctx) {
+                  ctx.fillStyle = '#000000';
+                  ctx.fillRect(0, 0, canvas.width, canvas.height);
+                  ctx.fillStyle = '#ffffff';
+                  ctx.font = '24px Arial';
+                  ctx.textAlign = 'center';
+                  ctx.textBaseline = 'middle';
+                  ctx.fillText(`Frame ${frameNumber}`, canvas.width / 2, canvas.height / 2);
+                }
+                img.src = canvas.toDataURL();
+                images[i] = img;
+                updateLoadingProgress();
+                resolve();
+              }
+            };
           };
+          
+          // Start with WebP
+          tryLoad('webp');
         });
       }
     };
