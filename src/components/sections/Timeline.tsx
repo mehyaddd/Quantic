@@ -43,7 +43,7 @@ const Timeline: React.FC = () => {
     window.addEventListener('resize', setCanvasSize);
     
     // Prepare image sequence - adjusted to handle missing frames
-    const frameCount = 254; // Total frames excluding problematic ones
+    const frameCount = 253; // Updated to account for missing frames (5 and 247)
     const ctx = canvas.getContext('2d');
     
     if (!ctx) {
@@ -81,7 +81,8 @@ const Timeline: React.FC = () => {
       
       // Load images sequentially to prevent overwhelming the browser
       for (let i = 0; i < frameCount; i++) {
-        const frameNumber = i >= 4 ? i + 2 : i + 1; // Skip frame 5 by adding 2 after index 4
+        // Skip frames 5 and 247 by adjusting the frame number calculation
+        const frameNumber = i < 4 ? i + 1 : (i < 246 ? i + 2 : i + 3);
         const img = new Image();
         img.crossOrigin = "anonymous";
         
