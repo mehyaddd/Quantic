@@ -4,7 +4,7 @@ import GallerySlider from '../gallery/GallerySlider';
 import OptimizedGallerySlider from '../gallery/OptimizedGallerySlider';
 import VideoPlayer from '../ui/VideoPlayer';
 import { gsap, gsapManager } from '../../utils/gsapManager';
-import { isLowEndDeviceQuickCheck } from '../../../utils/performanceDetector';
+import { isLowEndDeviceQuickCheck } from '../../utils/performanceDetector';
 import styles from '../../styles/components/portfolio.module.css';
 
 // Helper function to check if device is mobile
