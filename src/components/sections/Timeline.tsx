@@ -2,28 +2,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// Ensure GSAP plugins are registered
+// Register ScrollTrigger
 gsap.registerPlugin(ScrollTrigger);
-
-// Define types for image sequence configuration
-type ImageSequenceConfig = {
-  urls: string[];
-  canvas: HTMLCanvasElement;
-  clear?: boolean;
-  scrollTrigger?: any;
-  paused?: boolean;
-  fps?: number;
-  onUpdate?: (index: number, image: HTMLImageElement, progress: number) => void;
-  onComplete?: () => void;
-  onStart?: () => void;
-  onReverseComplete?: () => void;
-};
 
 const Timeline: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [loadedImages, setLoadedImages] = useState<HTMLImageElement[]>([]);
+  const animationFrameRef = useRef<number>();
   
   useEffect(() => {
     if (!canvasRef.current || !sectionRef.current) return;
@@ -32,10 +20,9 @@ const Timeline: React.FC = () => {
     const section = sectionRef.current;
     
     // Keep track of all instances for cleanup
-    const tweens: gsap.core.Tween[] = [];
     const triggers: ScrollTrigger[] = [];
     
-    // Set canvas size with fixed dimensions
+    // Set canvas size with fixed dimensions and proper scaling
     const setCanvasSize = () => {
       const canvasWidth = 1920;
       const canvasHeight = 3200;
@@ -55,9 +42,8 @@ const Timeline: React.FC = () => {
     setCanvasSize();
     window.addEventListener('resize', setCanvasSize);
     
-    // Prepare image sequence - adjusted to skip frame 247
-    const frameCount = 254;
-    const images: HTMLImageElement[] = [];
+    // Prepare image sequence - adjusted to handle missing frames
+    const frameCount = 254; // Total frames excluding problematic ones
     const ctx = canvas.getContext('2d');
     
     if (!ctx) {
@@ -69,6 +55,7 @@ const Timeline: React.FC = () => {
     // Load all images
     const loadImages = async () => {
       let loadedCount = 0;
+      const images: HTMLImageElement[] = [];
       
       const updateLoadingProgress = () => {
         loadedCount++;
@@ -84,6 +71,7 @@ const Timeline: React.FC = () => {
         ctx.fillText(`Loading: ${progress}%`, canvas.width / 2, canvas.height / 2);
         
         if (loadedCount === frameCount) {
+          setLoadedImages(images);
           setTimeout(() => {
             setIsLoading(false);
             drawImage(0); // Draw first frame when loaded
@@ -91,34 +79,45 @@ const Timeline: React.FC = () => {
         }
       };
       
-      // Load all images in parallel, skipping frame 247
+      // Load images sequentially to prevent overwhelming the browser
       for (let i = 0; i < frameCount; i++) {
-        const frameNumber = i >= 246 ? i + 2 : i + 1; // Skip frame 247 by incrementing frame numbers after 246
+        const frameNumber = i >= 246 ? i + 2 : i + 1; // Skip problematic frames
         const img = new Image();
         img.crossOrigin = "anonymous";
         img.src = `/images/paper/${frameNumber}.webp`;
         
-        img.onload = updateLoadingProgress;
-        img.onerror = () => {
-          console.error(`Failed to load image: ${frameNumber}.webp`);
-          updateLoadingProgress();
-        };
-        
-        images[i] = img;
+        // Create a promise for each image load
+        await new Promise<void>((resolve) => {
+          img.onload = () => {
+            images[i] = img;
+            updateLoadingProgress();
+            resolve();
+          };
+          img.onerror = () => {
+            console.warn(`Failed to load image: ${frameNumber}.webp, retrying with PNG`);
+            // Fallback to PNG if WebP fails
+            img.src = `/images/paper/${frameNumber}.png`;
+            img.onerror = () => {
+              console.error(`Failed to load image: ${frameNumber}.png`);
+              updateLoadingProgress();
+              resolve();
+            };
+          };
+        });
       }
     };
     
     // Function to draw a specific frame
     const drawImage = (index: number) => {
-      if (index < 0 || index >= images.length) return;
+      if (!loadedImages[index]) return;
       
-      const img = images[index];
-      if (!img || !img.complete || img.naturalWidth === 0) return;
+      const img = loadedImages[index];
+      if (!ctx || !img.complete || img.naturalWidth === 0) return;
       
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       try {
-        // Calculate image dimensions
+        // Calculate image dimensions for proper scaling
         const imgRatio = img.naturalWidth / img.naturalHeight;
         const canvasRatio = canvas.width / canvas.height;
         
@@ -152,11 +151,10 @@ const Timeline: React.FC = () => {
         scrollTrigger: {
           trigger: section,
           start: "top top", 
-          end: "+=300%", // 3x the height of the viewport
+          end: "+=300%",
           pin: true,
           anticipatePin: 1,
           scrub: 1,
-          markers: false,
           onUpdate: (self) => {
             // Calculate current frame based on scroll progress
             const frameIndex = Math.min(
@@ -166,37 +164,32 @@ const Timeline: React.FC = () => {
               ),
               frameCount - 1
             );
-            drawImage(frameIndex);
+            
+            if (animationFrameRef.current) {
+              cancelAnimationFrame(animationFrameRef.current);
+            }
+            animationFrameRef.current = requestAnimationFrame(() => drawImage(frameIndex));
           },
-          onLeave: () => {
-            // Ensure the last frame is shown when scrolling down past the section
-            drawImage(frameCount - 1);
-          },
-          onLeaveBack: () => {
-            // Ensure the first frame is shown when scrolling up past the section
-            drawImage(0);
-          }
+          onLeave: () => drawImage(frameCount - 1),
+          onLeaveBack: () => drawImage(0)
         }
       });
       
-      // Store for cleanup
       triggers.push(tl.scrollTrigger!);
     };
     
-    // Set up scroll animation after a short delay to ensure DOM is ready
+    // Set up scroll animation after images are loaded
     const initTimeout = setTimeout(() => {
-      if (!isLoading && images.length === frameCount) {
+      if (!isLoading && loadedImages.length === frameCount) {
         setupScrollAnimation();
       } else {
-        // If not all images are loaded yet, check again in 500ms
         const checkInterval = setInterval(() => {
-          if (!isLoading && images.length === frameCount) {
+          if (!isLoading && loadedImages.length === frameCount) {
             clearInterval(checkInterval);
             setupScrollAnimation();
           }
         }, 500);
         
-        // Cleanup interval after 30 seconds maximum (failsafe)
         setTimeout(() => clearInterval(checkInterval), 30000);
       }
     }, 500);
@@ -206,16 +199,14 @@ const Timeline: React.FC = () => {
       window.removeEventListener('resize', setCanvasSize);
       clearTimeout(initTimeout);
       
-      // Kill all tweens
-      tweens.forEach(tween => tween.kill());
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
       
-      // Kill all ScrollTriggers
       triggers.forEach(trigger => trigger.kill());
-      
-      // Fallback cleanup for any remaining ScrollTriggers
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
-  }, []);
+  }, [loadedImages]);
   
   return (
     <section className="w-full bg-secondary/5">
