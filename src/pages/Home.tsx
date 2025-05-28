@@ -1,28 +1,63 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import ServicesSection from '../components/sections/ServicesSection';
-import GallerySlider from '../components/gallery/GallerySlider';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import PortfolioSection from '../components/sections/PortfolioSection';
+import Projects from '../components/sections/Projects';
+import HeroSection from '../components/sections/HeroSection';
 import styles from '../styles/components/home.module.css';
 
-// کامپوننت‌های بهینه‌شده با React.memo
-const HeroContent = memo(() => (
-  <div className={styles.heroContent}>
-    <div className={styles.contentBackdrop}>
-      <h1 className={styles.heroTitle}>
-        Quantic Studio
-      </h1>
-      
-      <div className={styles.buttonContainer}>
-        <Link to="/projects" className={styles.primaryButton}>
-          View Projects
-          <ArrowRight size={20} className={styles.primaryButtonIcon} />
-        </Link>
+gsap.registerPlugin(ScrollTrigger);
+
+// Memoized components
+const HeroContent = memo(() => {
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const buttonRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: titleRef.current,
+        start: 'top center',
+        end: 'bottom center',
+        scrub: 1,
+      },
+    });
+
+    tl.to(titleRef.current, {
+      opacity: 0,
+      y: -50,
+      duration: 1,
+    });
+
+    return () => {
+      tl.kill();
+    };
+  }, []);
+
+  return (
+    <div className={styles.heroContent}>
+      <div className={styles.contentBackdrop}>
+        <h1 ref={titleRef} className={styles.heroTitle}>
+          Quantic Studio
+        </h1>
+        
+        <div className={styles.buttonContainer}>
+          <Link 
+            ref={buttonRef}
+            to="/projects" 
+            className={styles.primaryButton}
+          >
+            View Projects
+            <ArrowRight size={20} className={styles.primaryButtonIcon} />
+          </Link>
+        </div>
       </div>
     </div>
-  </div>
-));
+  );
+});
 
 const ScrollIndicator = memo(() => (
   <div className={styles.scrollIndicator}>
@@ -49,18 +84,14 @@ const Home: React.FC = () => {
         <ScrollIndicator />
       </section>
       
-      {/* Services Section */}
-      <ServicesSection id="services" />
-      
-      {/* Gallery Slider */}
-      <section className={styles.gallerySection}>
-        <div className={styles.galleryContainer}>
-          <h2 className={styles.galleryTitle}>
-            My <span className={styles.primaryText}>Portfolio</span>
-              </h2>
-        </div>
-        <GallerySlider className={styles.gallerySlider} />
-      </section>
+      {/* Portfolio Section */}
+      <PortfolioSection />
+
+      {/* Projects Section */}
+      <Projects />
+
+      {/* Hero Section with Image Sequence */}
+      <HeroSection />
     </motion.main>
   );
 };
