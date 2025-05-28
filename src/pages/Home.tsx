@@ -3,9 +3,11 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import PortfolioSection from '../components/sections/PortfolioSection';
+import Projects from '../components/sections/Projects';
+import HeroSection from '../components/sections/HeroSection';
 import styles from '../styles/components/home.module.css';
 
-// کامپوننت‌های بهینه‌شده با React.memo
+// Memoized components
 const HeroContent = memo(() => (
   <div className={styles.heroContent}>
     <div className={styles.contentBackdrop}>
@@ -56,6 +58,12 @@ const Home: React.FC = () => {
       
       {/* Portfolio Section */}
       <PortfolioSection />
+
+      {/* Projects Section */}
+      <Projects />
+
+      {/* Hero Section with Image Sequence */}
+      <HeroSection />
     </motion.main>
   );
 };
