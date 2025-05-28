@@ -10,12 +10,8 @@
   height: var(--canvas-height, 600px);
   display: block; /* Good practice for canvas */
   /* overflow: hidden; */ /* Canvas itself usually doesn't need overflow:hidden */
-  cursor: pointer;
+  cursor: grab;
   opacity: 1;
-  margin: 0 auto; /* اطمینان از قرار گرفتن در مرکز */
-  padding: 0; /* اطمینان از عدم وجود پدینگ */
-  box-sizing: border-box; /* اطمینان از اینکه پدینگ در عرض محاسبه می‌شود */
-  max-width: 100%;
 }
 
 /* Responsive heights for different screen sizes */
@@ -43,17 +39,6 @@
   }
 }
 
-/* Mobile styles */
-@media (max-width: 639px) {
-  :root {
-    --canvas-height: 400px; /* کاهش ارتفاع در موبایل */
-  }
-  
-  #canvas {
-    height: 400px; /* تنظیم ارتفاع ثابت برای موبایل */
-  }
-}
-
 #canvas:active {
-  cursor: pointer;
+  cursor: grabbing;
 }

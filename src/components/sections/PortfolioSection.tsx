@@ -3,9 +3,9 @@ import SplitType from 'split-type';
 import GallerySlider from '../gallery/GallerySlider';
 import OptimizedGallerySlider from '../gallery/OptimizedGallerySlider';
 import VideoPlayer from '../ui/VideoPlayer';
-import { gsap, gsapManager } from '@/lib/utils';
-import { isLowEndDeviceQuickCheck } from '@/lib/utils';
-import styles from '@/styles/components/portfolio.module.css';
+import { gsap, gsapManager } from '../../lib/utils/gsap';
+import { isLowEndDeviceQuickCheck } from '../../lib/utils/performance';
+import styles from '../../styles/components/portfolio.module.css';
 
 // Helper function to check if device is mobile
 const isMobile = () => {

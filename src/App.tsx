@@ -28,14 +28,12 @@ function App() {
     // Add noise effect class to body
     document.body.classList.add('has-noise-effect');
     
-    // Set a shorter loading time to improve user experience
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1000); // Reduced from 2000
+    }, 2000);
 
     return () => {
       clearTimeout(timer);
-      // Cleanup ScrollTrigger instances
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
       // Clean up noise effect
       document.body.classList.remove('has-noise-effect');
@@ -43,16 +41,12 @@ function App() {
   }, []);
 
   useGSAP(() => {
-    if (!loading) {
-      try {
     // Set up section transitions
     sectionsRef.current.forEach((section, i) => {
-          if (!section) return; // Skip if section ref is not assigned
-          
-          // Initial state - set items visible by default to avoid flashes
+      // Initial state
       gsap.set(section.children, {
-            y: 0,
-            opacity: 1
+        y: 50,
+        opacity: 0
       });
 
       // Create scroll trigger for each section
@@ -74,10 +68,10 @@ function App() {
           document.querySelector(`[data-section="${section.id}"]`)?.classList.add('text-primary');
         },
         onLeaveBack: () => {
-              // Reset section content when scrolling back up, but keep visible
+          // Reset section content when scrolling back up
           gsap.to(section.children, {
             y: 50,
-                opacity: 0.8,
+            opacity: 0,
             duration: 0.5
           });
           
@@ -100,11 +94,7 @@ function App() {
         }
       });
     });
-      } catch (error) {
-        console.error("Error setting up animations:", error);
-      }
-    }
-  }, [loading]);
+  }, []);
 
   const scrollToSection = (id: string) => {
     gsap.to(window, {
@@ -127,32 +117,41 @@ function App() {
           <main ref={mainRef} className="relative w-full">
             <section 
               id="home" 
-              ref={el => el && (sectionsRef.current[0] = el as HTMLDivElement)}
+              ref={el => sectionsRef.current[0] = el as HTMLDivElement}
               className="min-h-screen relative z-10"
             >
               <Home />
             </section>
             <section 
               id="about"
-              ref={el => el && (sectionsRef.current[1] = el as HTMLDivElement)}
+              ref={el => sectionsRef.current[1] = el as HTMLDivElement}
               className="min-h-screen relative z-10"
             >
               <About />
             </section>
             <section 
               id="projects"
-              ref={el => el && (sectionsRef.current[2] = el as HTMLDivElement)}
+              ref={el => sectionsRef.current[2] = el as HTMLDivElement}
               className="min-h-screen relative z-10"
             >
               <Projects />
             </section>
             <section 
               id="contact"
-              ref={el => el && (sectionsRef.current[3] = el as HTMLDivElement)}
+              ref={el => sectionsRef.current[3] = el as HTMLDivElement}
               className="min-h-screen relative z-20"
             >
               <Contact />
             </section>
+            {/* 
+            <section 
+              id="gallery"
+              ref={el => sectionsRef.current[4] = el as HTMLDivElement}
+              className="min-h-screen"
+            >
+              <Gallery />
+            </section>
+            */}
           </main>
           <Footer />
           <div className="fixed bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black to-transparent pointer-events-none z-0"></div>

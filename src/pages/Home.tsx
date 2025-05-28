@@ -2,7 +2,8 @@ import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import PortfolioSection from '../components/sections/PortfolioSection';
+import ServicesSection from '../components/sections/ServicesSection';
+import GallerySlider from '../components/gallery/GallerySlider';
 import styles from '../styles/components/home.module.css';
 
 // کامپوننت‌های بهینه‌شده با React.memo
@@ -44,18 +45,22 @@ const Home: React.FC = () => {
     >
       {/* Hero Section */}
       <section className={styles.heroSection}>
-        {/* Grid Background with center-expanding lines */}
-        <div className={styles.gridContainer}>
-          <div className={styles.verticalLines}></div>
-          <div className={styles.horizontalLines}></div>
-        </div>
-        
         <HeroContent />
         <ScrollIndicator />
       </section>
       
-      {/* Portfolio Section */}
-      <PortfolioSection />
+      {/* Services Section */}
+      <ServicesSection id="services" />
+      
+      {/* Gallery Slider */}
+      <section className={styles.gallerySection}>
+        <div className={styles.galleryContainer}>
+          <h2 className={styles.galleryTitle}>
+            My <span className={styles.primaryText}>Portfolio</span>
+              </h2>
+        </div>
+        <GallerySlider className={styles.gallerySlider} />
+      </section>
     </motion.main>
   );
 };

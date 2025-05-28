@@ -7,7 +7,7 @@ import { Code, Palette, Monitor, ArrowRight, Award, BookOpen, PanelRight, Briefc
 import GlitchImage from '../components/animations/GlitchImage';
 import Projects from '../components/sections/Projects';
 import Stats from '../components/sections/Stats';
-import '../styles/typing-animation.css';
+import Timeline from '../components/sections/Timeline';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,7 +20,6 @@ const VisibilityTypedText: React.FC<{ text: string; delay?: number; speed?: numb
   const [displayedText, setDisplayedText] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const [hasStartedTyping, setHasStartedTyping] = useState(false);
-  const [isTypingComplete, setIsTypingComplete] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
   // Setup intersection observer to detect when element is visible
@@ -57,7 +56,6 @@ const VisibilityTypedText: React.FC<{ text: string; delay?: number; speed?: numb
           currentIndex++;
         } else {
           clearInterval(interval);
-          setIsTypingComplete(true); // Mark typing as complete
         }
       }, speed);
       
@@ -66,39 +64,38 @@ const VisibilityTypedText: React.FC<{ text: string; delay?: number; speed?: numb
     
     return () => clearTimeout(startTypingTimeout);
   }, [isVisible, hasStartedTyping, text, delay, speed]);
-
-  // Final fallback - always show complete text after 10 seconds
-  useEffect(() => {
-    const finalFallback = setTimeout(() => {
-      setDisplayedText(text);
-      setIsTypingComplete(true);
-    }, 10000);
-    
-    return () => clearTimeout(finalFallback);
-  }, [text]);
   
   return (
-    <div ref={containerRef} className="typing-container">
-      <div style={{
-        position: 'absolute',
-        visibility: 'hidden',
-        whiteSpace: 'pre-wrap',
-        width: '100%'
-      }}>
-        {text}
-      </div>
-      <div className="typing-text-wrapper">
+    <div ref={containerRef}>
       <span>{displayedText}</span>
-        {displayedText.length < text.length && hasStartedTyping && !isTypingComplete && (
+      {displayedText.length < text.length && hasStartedTyping && (
         <span className="typing-cursor">|</span>
       )}
-      </div>
     </div>
   );
 };
 
 const About: React.FC = () => {
+  const timelineRef = useRef<HTMLDivElement>(null);
+  
   useEffect(() => {
+    // Timeline animation
+    const timelineItems = timelineRef.current?.querySelectorAll('.timeline-item');
+    
+    if (timelineItems) {
+      gsap.from(timelineItems, {
+        opacity: 0,
+        y: 50,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: timelineRef.current,
+          start: 'top 70%',
+        },
+      });
+    }
+    
     return () => {
       // Clean up ScrollTrigger instances
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
@@ -114,7 +111,7 @@ const About: React.FC = () => {
       className="pt-0 md:pt-28"
     >
       {/* About Intro Section */}
-      <section className="pt-0 pb-16 md:pb-32 md:py-20">
+      <section className="pt-0 pb-0 md:py-20">
         <div className="container mx-auto px-4 md:px-8">
           {/* Mobile-only title that appears above the image */}
           <div className="block lg:hidden text-center mb-20 mt-0">
@@ -156,15 +153,15 @@ const About: React.FC = () => {
                 <VisibilityTypedText 
                   text="I'm a passionate web developer and designer with a focus on creating exceptional digital experiences that combine aesthetic appeal with functional excellence."
                   delay={300}
-                  speed={5}
+                  speed={20}
                 />
               </div>
               
               <div className="text-muted-foreground mb-8">
                 <VisibilityTypedText 
                   text="With over 5 years of experience in the industry, I've worked with various clients from startups to established companies, helping them achieve their goals through thoughtful design and clean, efficient code. I'm particularly interested in interactive web experiences, performance optimization, and creating intuitive user interfaces."
-                  delay={1500}
-                  speed={3}
+                  delay={3000}
+                  speed={10}
                 />
               </div>
               
@@ -185,6 +182,11 @@ const About: React.FC = () => {
       
       {/* Stats Section */}
       <Stats />
+      
+      {/* Experience Timeline */}
+      <div className="mt-8 md:mt-16">
+        <Timeline />
+        </div>
       
       {/* CTA Section */}
       <section className="py-16 md:py-24 bg-accent text-white">

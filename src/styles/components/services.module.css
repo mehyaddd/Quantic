@@ -1,0 +1,803 @@
+/* Services Section Styles - Inspired by spatzek.studio */
+
+.servicesSection {
+  padding: 8rem 0;
+  position: relative;
+  overflow: hidden;
+  background-color: #0a0a0a;
+  transition: opacity 0.6s ease;
+  opacity: 1;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+}
+
+/* Grid container with center origin - copied from landing section */
+.gridContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.9) 50%,
+    rgba(0, 0, 0, 1) 100%
+  );
+}
+
+/* Fading mask for grid edges */
+.gridContainer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: 
+    radial-gradient(
+      circle at center,
+      transparent 0%,
+      rgba(0, 0, 0, 0.3) 50%,
+      rgba(0, 0, 0, 0.8) 100%
+    );
+}
+
+/* Vertical lines expanding from center */
+.verticalLines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 0;
+  animation: particleFlow 15s linear infinite;
+}
+
+/* Generate vertical lines */
+.verticalLines::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-image: 
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(64, 224, 208, 0.15) 0%,
+      transparent 50%
+    ),
+    repeating-linear-gradient(
+    to right,
+      transparent 0px,
+      transparent 40px,
+      rgba(64, 224, 208, 0.1) 40px,
+      rgba(64, 224, 208, 0.1) 41px,
+      transparent 41px,
+      transparent 80px
+  );
+  opacity: 0;
+  animation: particleFade 15s ease-in-out infinite;
+}
+
+/* Horizontal lines expanding from center */
+.horizontalLines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  z-index: 0;
+  animation: particleFlow 15s linear infinite reverse;
+}
+
+/* Generate horizontal lines */
+.horizontalLines::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-image: 
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 105, 180, 0.15) 0%,
+      transparent 50%
+    ),
+    repeating-linear-gradient(
+    to bottom,
+      transparent 0px,
+      transparent 40px,
+      rgba(255, 105, 180, 0.1) 40px,
+      rgba(255, 105, 180, 0.1) 41px,
+      transparent 41px,
+      transparent 80px
+  );
+  opacity: 0;
+  animation: particleFade 15s ease-in-out infinite;
+}
+
+@keyframes particleFlow {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(2%, 2%) scale(1.1);
+  }
+  50% {
+    transform: translate(0, 0) scale(1);
+  }
+  75% {
+    transform: translate(-2%, -2%) scale(0.9);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes particleFade {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  20% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+  40% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+  60% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+  80% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+/* Disable animations for mobile devices */
+@media (max-width: 768px) {
+  .verticalLines,
+  .horizontalLines {
+    animation: none;
+  }
+  
+  .verticalLines::after,
+  .horizontalLines::after {
+    animation: particleFade 15s ease-in-out infinite;
+    opacity: 0.6;
+    transform: none;
+  }
+}
+
+.servicesSection.visible {
+  opacity: 1;
+}
+
+.servicesContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.servicesHeader {
+  text-align: left;
+  margin-bottom: 4rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 10;
+}
+
+/* Critical style for service title to ensure visibility */
+.servicesTitle {
+  font-size: 2.5rem;
+  font-weight: 500;
+  color: #ffffff !important;
+  text-align: left;
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  z-index: 10;
+  opacity: 1 !important;
+  visibility: visible !important;
+  text-shadow: 0 0 1px rgba(255,255,255,0.5);
+}
+
+.servicesTitle::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.servicesTitle:hover::before {
+  opacity: 1;
+}
+
+.primaryText {
+  color: white;
+  opacity: 0.7;
+}
+
+.titleLineContainer {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  position: relative;
+  margin-top: 3rem;
+  overflow: hidden;
+}
+
+.titleLine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    rgba(255, 255, 255, 0.8) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.visible .titleLine {
+  transform: translateX(0);
+}
+
+@media (min-width: 768px) {
+  .servicesSection {
+    padding: 12rem 0;
+  }
+
+  .servicesContainer {
+    padding: 0 2rem;
+  }
+
+  .servicesHeader {
+    margin-bottom: 6rem;
+  }
+
+  .servicesTitle {
+    font-size: 6rem;
+    font-weight: 300;
+    color: #ffffff !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .servicesTitle {
+    font-size: 7rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .servicesTitle {
+    font-size: 8rem;
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 767px) {
+  .servicesSection {
+    padding: 4rem 0;
+    min-height: auto;
+  }
+
+  .servicesContainer {
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .servicesHeader {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+  }
+
+  .servicesTitle {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #ffffff !important;
+    text-align: center;
+    margin: 0 auto 2rem;
+    padding: 0;
+    line-height: 1.2;
+    position: relative;
+    z-index: 10;
+    background: none;
+    text-shadow: none;
+    transform: none;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+  }
+
+  .servicesTitle::before,
+  .servicesTitle::after {
+    display: none;
+  }
+
+  .servicesList {
+    width: 100%;
+  }
+
+  .serviceItem {
+    opacity: 1 !important;
+    transform: none !important;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    min-height: 100px;
+  }
+
+  .serviceTitle {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    color: #ffffff;
+  }
+
+  .serviceDescription {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+}
+
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 3rem;
+  position: relative;
+}
+
+@media (min-width: 640px) {
+  .servicesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .servicesGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4rem;
+  }
+}
+
+/* Service Card */
+.serviceCard {
+  padding: 0;
+  color: white;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 2.5rem;
+  border-radius: 4px;
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  opacity: 0;
+  transform: translateY(30px);
+  backdrop-filter: blur(10px);
+}
+
+.visible .serviceCard {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.serviceIcon {
+  margin-bottom: 2rem;
+  color: white;
+  display: flex;
+  justify-content: flex-start;
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  position: relative;
+}
+
+.serviceIcon::after {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  z-index: -1;
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.serviceIcon svg {
+  width: 32px;
+  height: 32px;
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.serviceTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: white;
+  text-align: left;
+  transition: all 0.5s ease;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+  position: relative;
+}
+
+.serviceDescription {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  line-height: 1.7;
+  text-align: left;
+  transition: all 0.5s ease;
+}
+
+.cardLine {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    rgba(255, 255, 255, 0.8) 50%,
+    transparent 100%
+  );
+  transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.serviceCard:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-5px);
+}
+
+.serviceCard:hover .serviceIcon {
+  transform: scale(1.1);
+}
+
+.serviceCard:hover .serviceIcon::after {
+  transform: scale(1.2);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.serviceCard:hover .serviceTitle {
+  color: #ffffff;
+}
+
+.serviceCard:hover .serviceDescription {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.serviceCard:hover .cardLine {
+  width: 100%;
+}
+
+/* Background Elements */
+.sectionBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.noiseBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/png;base64,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");
+  opacity: 0.05;
+}
+
+/* New Modern Services Layout */
+.servicesList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.serviceItem {
+  position: relative;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  cursor: pointer;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+}
+
+.serviceItem::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 255, 255, 0.06) 0%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.serviceItem::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 50%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.serviceItem:hover::before,
+.serviceItem:hover::after {
+  opacity: 1;
+}
+
+.serviceContent {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.serviceIcon {
+  position: relative;
+  margin-right: 1.5rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.serviceIcon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.serviceItem:hover .serviceIcon::before {
+  transform: translateX(100%);
+}
+
+.serviceIcon svg {
+  width: 30px;
+  height: 30px;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.serviceItem:hover .serviceIcon {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-5px);
+}
+
+.serviceItem:hover .serviceIcon svg {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.serviceText {
+  flex: 1;
+  text-align: left;
+}
+
+.serviceTitle {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.serviceTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -0.5rem;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.5);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.serviceItem:hover .serviceTitle::after {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.serviceDescription {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.4;
+  transition: all 0.3s ease;
+}
+
+.serviceItem:hover .serviceDescription {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Desktop Styles */
+@media (min-width: 768px) {
+  .servicesList {
+    grid-template-columns: 1fr;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .serviceItem {
+    min-height: 120px;
+    padding: 1.5rem 2rem;
+  }
+
+  .serviceIcon {
+    margin-right: 2rem;
+    width: 70px;
+    height: 70px;
+  }
+
+  .serviceIcon svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .serviceTitle {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .serviceDescription {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+}
+
+/* Hover Effects - Only on Desktop */
+@media (hover: hover) {
+  .serviceItem::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(255, 255, 255, 0.06) 0%,
+      transparent 50%
+    );
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+
+  .serviceItem::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      45deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.03) 50%,
+      transparent 100%
+    );
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+
+  .serviceItem:hover::before,
+  .serviceItem:hover::after {
+    opacity: 1;
+  }
+
+  .serviceItem:hover .serviceIcon {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-5px);
+  }
+
+  .serviceItem:hover .serviceIcon svg {
+    transform: scale(1.1) rotate(5deg);
+  }
+
+  .serviceItem:hover .serviceTitle::after {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.8);
+  }
+
+  .serviceItem:hover .serviceDescription {
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+/* Mobile Styles */
+.mobile {
+  /* Disable complex animations on mobile */
+  transition: none !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+.mobile .serviceItem {
+  transition: none !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+.mobile .serviceIcon {
+  transition: none !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+.mobile .serviceTitle {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #ffffff;
+  opacity: 1 !important;
+  visibility: visible !important;
+  text-shadow: none;
+  transform: none;
+  transition: none;
+}
+
+.mobile .serviceDescription {
+  transition: none !important;
+  transform: none !important;
+  animation: none !important;
+}

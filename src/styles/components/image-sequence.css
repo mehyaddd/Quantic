@@ -1,0 +1,170 @@
+.image-sequence-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-sequence-section {
+  background-color: #000;
+  position: relative;
+  overflow: hidden;
+  height: 100vh; /* تنها ارتفاع بخش نمایش */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-sequence-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  background: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+  z-index: 20;
+  pointer-events: none;
+}
+
+.image-sequence-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* بخش نمایش وضعیت بارگذاری */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 30;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  width: 80%;
+  max-width: 400px;
+}
+
+.loading-text {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  color: white;
+  text-align: center;
+}
+
+.loading-bar {
+  width: 100%;
+  height: 6px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.loading-progress {
+  height: 100%;
+  background: linear-gradient(to right, #41e2ba, #4b6eff);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.loading-percentage {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* دکوراسیون اضافی برای اسکرول محور */
+.image-sequence-section .scroll-indicator {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0.7;
+  z-index: 30;
+  transition: opacity 0.3s ease;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+.image-sequence-section .scroll-indicator::after {
+  content: '';
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(255,255,255,0));
+  margin-top: 10px;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.7;
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(5px);
+  }
+  100% {
+    opacity: 0.7;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+canvas {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* تنظیمات رسپانسیو */
+@media (max-width: 768px) {
+  .image-sequence-container canvas {
+    max-width: 100%;
+    max-height: 60vh;
+  }
+  
+  .loading-text {
+    font-size: 1.2rem;
+  }
+  
+  .loading-bar {
+    height: 4px;
+  }
+}
+
+/* پیشگیری از تاخیر در اسکرول */
+.gsap-marker-scroller-start,
+.gsap-marker-scroller-end,
+.gsap-marker-start,
+.gsap-marker-end {
+  z-index: 9999 !important;
+} 

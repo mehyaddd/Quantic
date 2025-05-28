@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import ElementTitles from '../ui/TitlesContainer';
 import '../../styles/components/canvas.css';
@@ -60,34 +60,11 @@ const imagesCount = 5;
 const totalWidth = slideCount * (slideWidth + gap);
 const slideUnit = slideWidth + gap;
 
-// اضافه کردن توابع کمکی
-const isMobile = () => {
-  return window.innerWidth <= 768;
-};
-
-// اضافه کردن props برای کلیک روی اسلایدها
-interface SlideCanvasProps {
-  onSlideClick?: (slideIndex: number) => void;
-}
-
-const ElementSlideGallery: React.FC<SlideCanvasProps> = ({ onSlideClick }) => {
+const ElementSlideGallery: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  
-  const sceneRef = useRef<{
-    renderer?: THREE.WebGLRenderer;
-    scene?: THREE.Scene;
-    camera?: THREE.PerspectiveCamera;
-    animationFrameId?: number;
-    isInitialized?: boolean;
-  }>({
-    isInitialized: false
-  });
 
   useEffect(() => {
     if (!canvasRef.current) return;
-    if (sceneRef.current.isInitialized) return;
-    
-    sceneRef.current.isInitialized = true;
     
     // Global settings
     const settings = {
@@ -116,25 +93,19 @@ const ElementSlideGallery: React.FC<SlideCanvasProps> = ({ onSlideClick }) => {
 
     // Three.js Setup
     const canvas = canvasRef.current;
-    
-    try {
     const renderer = new THREE.WebGLRenderer({
       canvas,
       antialias: true,
       preserveDrawingBuffer: true,
       alpha: true
     });
-      
-      // Store in ref for cleanup
-      sceneRef.current.renderer = renderer;
     
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     
     const scene = new THREE.Scene();
-      sceneRef.current.scene = scene;
-      
-      scene.background = null;
+    scene.background = new THREE.Color(0x000000);
+    scene.fog = new THREE.FogExp2(0x000000, 0.08);
     
     const camera = new THREE.PerspectiveCamera(
       50,
@@ -142,7 +113,6 @@ const ElementSlideGallery: React.FC<SlideCanvasProps> = ({ onSlideClick }) => {
       0.1,
       100
     );
-      sceneRef.current.camera = camera;
     camera.position.z = 5;
     
     // Lights
@@ -179,7 +149,6 @@ const ElementSlideGallery: React.FC<SlideCanvasProps> = ({ onSlideClick }) => {
     let dragStartX = 0;
     let dragLastX = 0;
     let scrollTimeoutId: number;
-      let frameCount = 0;
     
     // Functions
     const correctImageColor = (texture: THREE.Texture) => {
@@ -190,17 +159,13 @@ const ElementSlideGallery: React.FC<SlideCanvasProps> = ({ onSlideClick }) => {
     const slides: THREE.Mesh[] = [];
     
     const createSlide = (index: number) => {
-        // موبایل: کاهش تعداد ورتکس برای بهبود کارایی
-        const segmentsX = isMobile() ? 32 : 64;
-        const segmentsY = isMobile() ? 16 : 32;
-        
-        const geometry = new THREE.PlaneGeometry(slideWidth, slideHeight, segmentsX, segmentsY);
+      const geometry = new THREE.PlaneGeometry(slideWidth, slideHeight, 64, 32);
       const material = new THREE.MeshPhysicalMaterial({
         color: 0xffffff,
         side: THREE.DoubleSide,
         metalness: 0.2,
         roughness: 0.8,
-          clearcoat: isMobile() ? 0.3 : 0.4, // کاهش در موبایل
+        clearcoat: 0.4,
         clearcoatRoughness: 0.3
       });
       
@@ -227,11 +192,6 @@ const ElementSlideGallery: React.FC<SlideCanvasProps> = ({ onSlideClick }) => {
         imagePath,
         (texture) => {
           correctImageColor(texture);
-            // موبایل: کاهش کیفیت بافت برای بهبود کارایی
-            if (isMobile()) {
-              texture.minFilter = THREE.LinearFilter;
-              texture.generateMipmaps = false;
-            }
           material.map = texture;
           material.needsUpdate = true;
           
@@ -829,103 +789,49 @@ const ElementSlideGallery: React.FC<SlideCanvasProps> = ({ onSlideClick }) => {
         currentCanvas.style.cursor = "grab";
     }
     
-      // اضافه کردن تابع برای کلیک روی اسلایدها
-      const handleCanvasClick = (event: MouseEvent) => {
-        event.preventDefault();
-        
-        if (!slides.length) return;
-        
-        // تبدیل موقعیت موس به فضای Three.js
-        const rect = canvas.getBoundingClientRect();
-        const mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-        const mouseY = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-        
-        const raycaster = new THREE.Raycaster();
-        const mouse = new THREE.Vector2(mouseX, mouseY);
-        
-        raycaster.setFromCamera(mouse, camera);
-        
-        // بررسی برخورد با اسلایدها
-        const intersects = raycaster.intersectObjects(slides);
-        
-        if (intersects.length > 0) {
-          const clickedSlide = intersects[0].object as THREE.Mesh;
-          const slideIndex = clickedSlide.userData.index;
-          
-          // فراخوانی تابع callback اگر وجود داشته باشد
-          if (onSlideClick) {
-            onSlideClick(slideIndex % imagesCount);
-          }
-        }
-      };
-      
-      // اضافه کردن event listener برای کلیک
-      canvas.addEventListener('click', handleCanvasClick);
-      
-      // Clean up function
+    // Cleanup function
     return () => {
-        if (canvasRef.current?.isConnected === false) {
-          try {
-            if (sceneRef.current.animationFrameId) {
-              cancelAnimationFrame(sceneRef.current.animationFrameId);
-            }
-            
       // Remove event listeners
-            window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('mousedown', handleMouseDown);
-            window.removeEventListener('mouseup', handleMouseUp);
-            window.removeEventListener('mouseleave', handleMouseLeave);
-            window.removeEventListener('keydown', handleKeyDown);
-            window.removeEventListener('wheel', handleWheel);
-            window.removeEventListener('touchstart', handleTouchStart);
-            window.removeEventListener('touchmove', handleTouchMove);
-            window.removeEventListener('touchend', handleTouchEnd);
-            window.removeEventListener('resize', handleResize);
-            canvas.removeEventListener('click', handleCanvasClick);
-      
-            // Dispose of Three.js resources
-            if (scene) {
-              scene.traverse((object) => {
-                if (object instanceof THREE.Mesh) {
-                  if (object.geometry) object.geometry.dispose();
-                  if (object.material) {
-                    if (Array.isArray(object.material)) {
-                      object.material.forEach(material => disposeMaterial(material));
-                    } else {
-                      disposeMaterial(object.material);
-                    }
-                  }
-                }
-              });
-            }
-            
-            if (renderer) {
-      renderer.dispose();
-            }
-            
-            sceneRef.current.isInitialized = false;
-          } catch (error) {
-            console.error("Error during cleanup:", error);
-          }
-        }
-      };
-    } catch (error) {
-      console.error("Error initializing canvas:", error);
-      return () => {};
-    }
-    
-    function disposeMaterial(material: THREE.Material) {
-      // Check if material has a map property (like MeshStandardMaterial, etc.)
-      if ('map' in material && material.map instanceof THREE.Texture) {
-        material.map.dispose();
+      window.removeEventListener("mousemove", handleMouseMove);
+      if (currentCanvas) {
+          currentCanvas.removeEventListener("mousedown", handleMouseDown);
+          currentCanvas.removeEventListener("wheel", handleWheel);
+          currentCanvas.removeEventListener("touchstart", handleTouchStart);
+          currentCanvas.removeEventListener("touchmove", handleTouchMove);
+          currentCanvas.removeEventListener("touchend", handleTouchEnd);
       }
-      material.dispose();
-    }
-  }, [onSlideClick]);
+      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("mouseleave", handleMouseLeave);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("resize", handleResize);
+      
+      // Cancel animation frame
+      cancelAnimationFrame(animationId);
+      
+      // Dispose Three.js objects
+      slides.forEach((slide) => {
+        slide.geometry.dispose();
+        if (slide.material instanceof THREE.Material) {
+          slide.material.dispose();
+        } else if (Array.isArray(slide.material)) {
+          slide.material.forEach((material) => material.dispose());
+        }
+        scene.remove(slide);
+      });
+      
+      // Dispose lights
+      scene.remove(ambientLight);
+      scene.remove(directionalLight);
+      scene.remove(pointLight);
+      
+      // Dispose renderer
+      renderer.dispose();
+    };
+  }, []);
 
   return (
     <>
-      <canvas id="canvas" ref={canvasRef} style={{ margin: '0 auto' }}></canvas>
+      <canvas id="canvas" ref={canvasRef}></canvas>
       <ElementTitles imageTitles={imageTitles} slideCount={slideCount} imagesCount={imagesCount} />
     </>
   );

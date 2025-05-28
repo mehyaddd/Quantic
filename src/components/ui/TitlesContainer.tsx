@@ -60,10 +60,8 @@ const ElementTitles: React.FC<ElementTitlesProps> = ({ imageTitles, slideCount, 
     
     // Clean up function
     return () => {
-      if (titlesContainer.isConnected === false) {
       (window as any).titleElements = null;
       titlesContainer.innerHTML = '';
-      }
     };
   }, [imageTitles, slideCount, imagesCount]);
 

@@ -163,12 +163,187 @@ export const useParticleAnimation = ({ canvasRef }: ParticleAnimationProps) => {
   }, [initParticles, animateParticles]);
 };
 
-export const usePortfolioAnimation = (sectionRef: RefObject<HTMLElement>) => {
-  // ... existing code ...
+export const useServicesAnimation = (sectionRef: RefObject<HTMLElement>) => {
+  useEffect(() => {
+    if (!sectionRef.current) return;
+    
+    // Get the elements we want to animate
+    const title = sectionRef.current.querySelector('.servicesTitle');
+    const cards = gsap.utils.toArray<HTMLElement>(sectionRef.current.querySelectorAll('.serviceCard'));
+    const decorationTop = sectionRef.current.querySelector('.bgDecorationTop');
+    const decorationBottom = sectionRef.current.querySelector('.bgDecorationBottom');
+    
+    // Create a timeline for the animations
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 80%",
+        end: "top 30%",
+        scrub: 0.5,
+        toggleActions: "play none none reverse",
+      }
+    });
+    
+    // Title animation - split text for character-by-character animation
+    if (title) {
+      // Set initial state
+      gsap.set(title, { perspective: 400 });
+      
+      // Create the split text effect
+      const splitTitle = new SplitType(title as HTMLElement, { types: "chars" });
+      if (splitTitle.chars) {
+        gsap.set(splitTitle.chars, { 
+          opacity: 0,
+          rotateY: -90,
+          transformOrigin: "50% 50% -20"
+        });
+        
+        // Add to timeline
+        tl.to(splitTitle.chars, {
+          duration: 0.8,
+          opacity: 1,
+          rotateY: 0,
+          stagger: 0.03,
+          ease: "back.out(1.7)",
+        }, 0);
+      }
+    }
+    
+    // Background decoration animations
+    if (decorationTop) {
+      gsap.set(decorationTop, { 
+        opacity: 0, 
+        scale: 0.5,
+        x: 100,
+        y: 100
+      });
+      
+      tl.to(decorationTop, {
+        duration: 1.2,
+        opacity: 0.05,
+        scale: 1,
+        x: 0,
+        y: 0,
+        ease: "power2.out"
+      }, 0.2);
+    }
+    
+    if (decorationBottom) {
+      gsap.set(decorationBottom, { 
+        opacity: 0, 
+        scale: 0.5,
+        x: -100,
+        y: -100
+      });
+      
+      tl.to(decorationBottom, {
+        duration: 1.2,
+        opacity: 0.05,
+        scale: 1,
+        x: 0,
+        y: 0,
+        ease: "power2.out"
+      }, 0.3);
+    }
+    
+    // Service cards animation - staggered 3D flip effect
+    if (cards.length) {
+      cards.forEach((card, index) => {
+        gsap.set(card, { 
+          opacity: 0,
+          rotationX: -90,
+          transformPerspective: 800,
+          transformOrigin: "center top"
+        });
+        
+        // Card icon animation
+        const icon = card.querySelector('.serviceIcon');
+        if (icon) {
+          gsap.set(icon, { 
+            scale: 0,
+            opacity: 0,
+            rotation: -45
+          });
+        }
+        
+        // Card title animation
+        const cardTitle = card.querySelector('.serviceTitle');
+        if (cardTitle) {
+          gsap.set(cardTitle, { 
+            y: 20,
+            opacity: 0
+          });
+        }
+        
+        // Card description animation
+        const description = card.querySelector('.serviceDescription');
+        if (description) {
+          gsap.set(description, { 
+            y: 30,
+            opacity: 0
+          });
+        }
+        
+        // Add card animations to timeline with stagger
+        tl.to(card, {
+          duration: 0.8,
+          opacity: 1,
+          rotationX: 0,
+          ease: "back.out(1.5)",
+        }, 0.5 + (index * 0.1));
+        
+        // Animate card contents
+        if (icon) {
+          tl.to(icon, {
+            duration: 0.6,
+            scale: 1,
+            opacity: 1,
+            rotation: 0,
+            ease: "back.out(2)",
+          }, 0.7 + (index * 0.1));
+        }
+        
+        if (cardTitle) {
+          tl.to(cardTitle, {
+            duration: 0.5,
+            y: 0,
+            opacity: 1,
+            ease: "power2.out",
+          }, 0.8 + (index * 0.1));
+        }
+        
+        if (description) {
+          tl.to(description, {
+            duration: 0.5,
+            y: 0,
+            opacity: 1,
+            ease: "power2.out",
+          }, 0.9 + (index * 0.1));
+        }
+      });
+    }
+    
+    // Create a separate scroll-triggered animation for parallax effect
+    gsap.to(sectionRef.current, {
+      backgroundPosition: `50% ${-window.innerHeight / 10}px`,
+      ease: "none",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+    
+    return () => {
+      // Clean up all ScrollTrigger instances when component unmounts
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, [sectionRef]);
 };
 
 export default {
   useHeroTextAnimation,
   useParticleAnimation,
-  usePortfolioAnimation
+  useServicesAnimation
 }; 
