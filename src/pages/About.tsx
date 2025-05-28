@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Code, Palette, Monitor, ArrowRight, Award, BookOpen, PanelRight, Briefcase } from 'lucide-react';
 import GlitchImage from '../components/animations/GlitchImage';
 import Projects from '../components/sections/Projects';
 import Stats from '../components/sections/Stats';
-import Timeline from '../components/sections/Timeline';
 import '../styles/typing-animation.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 // A component that starts typing when it's visible in the viewport
 const VisibilityTypedText: React.FC<{ text: string; delay?: number; speed?: number }> = ({ 
@@ -14,14 +17,14 @@ const VisibilityTypedText: React.FC<{ text: string; delay?: number; speed?: numb
   delay = 0,
   speed = 30
 }) => {
-  const [displayedText, setDisplayedText] = React.useState('');
-  const [isVisible, setIsVisible] = React.useState(false);
-  const [hasStartedTyping, setHasStartedTyping] = React.useState(false);
-  const [isTypingComplete, setIsTypingComplete] = React.useState(false);
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [displayedText, setDisplayedText] = useState('');
+  const [isVisible, setIsVisible] = useState(false);
+  const [hasStartedTyping, setHasStartedTyping] = useState(false);
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   
   // Setup intersection observer to detect when element is visible
-  React.useEffect(() => {
+  useEffect(() => {
     if (!containerRef.current) return;
     
     const observer = new IntersectionObserver(
@@ -38,7 +41,7 @@ const VisibilityTypedText: React.FC<{ text: string; delay?: number; speed?: numb
   }, []);
   
   // Start typing when element becomes visible
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isVisible || hasStartedTyping) return;
     
     const startTypingTimeout = setTimeout(() => {
@@ -65,7 +68,7 @@ const VisibilityTypedText: React.FC<{ text: string; delay?: number; speed?: numb
   }, [isVisible, hasStartedTyping, text, delay, speed]);
 
   // Final fallback - always show complete text after 10 seconds
-  React.useEffect(() => {
+  useEffect(() => {
     const finalFallback = setTimeout(() => {
       setDisplayedText(text);
       setIsTypingComplete(true);
@@ -95,7 +98,12 @@ const VisibilityTypedText: React.FC<{ text: string; delay?: number; speed?: numb
 };
 
 const About: React.FC = () => {
-  // Removed the timelineRef and useEffect for timeline animation
+  useEffect(() => {
+    return () => {
+      // Clean up ScrollTrigger instances
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
   
   return (
     <motion.main
@@ -116,7 +124,7 @@ const About: React.FC = () => {
             <p className="text-muted-foreground max-w-2xl mx-auto">
               The path that has shaped my skills and expertise in the digital realm
             </p>
-         </div>
+          </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
             {/* Image Section */}
@@ -127,11 +135,11 @@ const About: React.FC = () => {
                   alt="Professional portrait" 
                   className="w-full h-full object-cover"
                 />
-               </div>
+              </div>
               <div className="absolute -bottom-6 -left-6 w-32 h-32 md:w-40 md:h-40 bg-primary rounded-2xl -z-10"></div>
               <div className="absolute -top-6 -right-6 w-32 h-32 md:w-40 md:h-40 bg-accent rounded-2xl -z-10"></div>
-             </div>
-             
+            </div>
+            
             {/* Text Section */}
             <div className="order-2 lg:order-1">
               {/* Desktop-only title that appears to the left of the image */}
@@ -142,23 +150,23 @@ const About: React.FC = () => {
                 <p className="text-muted-foreground max-w-2xl">
                   The path that has shaped my skills and expertise in the digital realm
                 </p>
-               </div>
-               
+              </div>
+              
               <div className="text-lg text-muted-foreground mb-6">
                 <VisibilityTypedText 
                   text="I'm a passionate web developer and designer with a focus on creating exceptional digital experiences that combine aesthetic appeal with functional excellence."
                   delay={300}
                   speed={5}
                 />
-               </div>
-               
+              </div>
+              
               <div className="text-muted-foreground mb-8">
                 <VisibilityTypedText 
                   text="With over 5 years of experience in the industry, I've worked with various clients from startups to established companies, helping them achieve their goals through thoughtful design and clean, efficient code. I'm particularly interested in interactive web experiences, performance optimization, and creating intuitive user interfaces."
                   delay={1500}
                   speed={3}
                 />
-               </div>
+              </div>
               
               <Link 
                 to="/contact" 
@@ -167,19 +175,16 @@ const About: React.FC = () => {
                 Let's Connect
                 <ArrowRight size={18} className="ml-2" />
               </Link>
-             </div>
-           </div>
-         </div>
-       </section>
-       
+            </div>
+          </div>
+        </div>
+      </section>
+      
       {/* Projects Section */}
       <Projects />
       
       {/* Stats Section */}
       <Stats />
-      
-      {/* My Journey - Timeline Component */}
-      <Timeline />
       
       {/* CTA Section */}
       <section className="py-16 md:py-24 bg-accent text-white">

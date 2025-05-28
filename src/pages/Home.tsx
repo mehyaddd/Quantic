@@ -2,7 +2,6 @@ import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import ServicesSection from '../components/sections/ServicesSection';
 import PortfolioSection from '../components/sections/PortfolioSection';
 import styles from '../styles/components/home.module.css';
 
@@ -54,9 +53,6 @@ const Home: React.FC = () => {
         <HeroContent />
         <ScrollIndicator />
       </section>
-      
-      {/* Services Section */}
-      <ServicesSection id="services" />
       
       {/* Portfolio Section */}
       <PortfolioSection />

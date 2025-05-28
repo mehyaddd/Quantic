@@ -12,7 +12,7 @@
   align-items: center;
 }
 
-/* Grid container with center origin - copied from services section */
+/* Grid container with center origin */
 .gridContainer {
   position: absolute;
   top: 0;

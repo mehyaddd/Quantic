@@ -196,7 +196,7 @@ const PortfolioSection: React.FC = () => {
         <div className={styles.horizontalLines}></div>
       </div>
       
-      {/* Title Container - Same alignment as Services */}
+      {/* Title Container */}
       <div className={styles.portfolioContainer}>
         <div className={styles.portfolioHeader}>
           <h2 
