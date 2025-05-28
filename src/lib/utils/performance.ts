@@ -1,7 +1,7 @@
 /**
- * Quick check to determine if the device is low-end based on basic criteria
- * @returns boolean indicating if the device is considered low-end
+ * Performance detection utilities
  */
+
 export const isLowEndDeviceQuickCheck = (): boolean => {
   // Check if device is mobile
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
