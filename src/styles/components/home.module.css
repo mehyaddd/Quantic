@@ -169,21 +169,6 @@
   }
 }
 
-/* Disable animations for mobile devices */
-@media (max-width: 768px) {
-  .verticalLines,
-  .horizontalLines {
-    animation: none;
-  }
-  
-  .verticalLines::after,
-  .horizontalLines::after {
-    animation: particleFade 15s ease-in-out infinite;
-    opacity: 0.6;
-    transform: none;
-  }
-}
-
 /* Content Container */
 .heroContent {
   position: relative;
@@ -213,6 +198,20 @@
   text-align: center;
   max-width: 52rem;
   margin: 0 auto;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.02)
+  );
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  transform: perspective(1000px) rotateX(0deg);
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.contentBackdrop:hover {
+  transform: perspective(1000px) rotateX(2deg);
 }
 
 .heroTitle {
@@ -225,6 +224,16 @@
   transform: translateY(20px);
   animation: titleReveal 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   position: relative;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(
+    to right,
+    #ffffff,
+    #f0f0f0,
+    #ffffff
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .heroTitle::after {
@@ -266,9 +275,134 @@
   }
 }
 
+/* Button Styles */
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.primaryButton {
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(240, 240, 240, 1) 100%
+  );
+  color: #000000;
+  padding: 1rem 2rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
+  text-decoration: none;
+  font-size: 1rem;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.primaryButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transform: translateX(-100%);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.primaryButton:hover::before {
+  transform: translateX(100%);
+}
+
+.primaryButton:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.primaryButtonIcon {
+  margin-left: 0.5rem;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.primaryButton:hover .primaryButtonIcon {
+  transform: translateX(0.25rem);
+}
+
+/* Scroll Indicator */
+.scrollIndicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-above);
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.scrollIndicator:hover {
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(-50%) translateY(-2px);
+}
+
+.scrollArrow {
+  animation: bounce 2s infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-6px);
+  }
+  60% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Responsive Design */
 @media (min-width: 768px) {
   .heroTitle {
     font-size: 4.5rem;
+  }
+  
+  .buttonContainer {
+    flex-direction: row;
+    width: auto;
+  }
+  
+  .primaryButton {
+    width: auto;
+    min-width: 200px;
   }
 }
 
@@ -282,45 +416,7 @@
   .heroTitle {
     font-size: 2.5rem;
   }
-}
-
-/* Button Styles */
-.buttonContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  justify-content: center;
-  align-items: center;
-  margin-top: 2rem;
-  width: 100%;
-}
-
-@media (min-width: 640px) {
-  .buttonContainer {
-    flex-direction: row;
-    width: auto;
-  }
-}
-
-.primaryButton {
-  background-color: white;
-  color: #000000;
-  padding: 1rem 2rem;
-  border-radius: 9999px;
-  font-weight: 500;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s;
-  transform: translateZ(0);
-  text-decoration: none;
-  font-size: 1rem;
-  width: 100%;
-  max-width: 300px;
-  margin: 0 auto;
-}
-
-@media (max-width: 640px) {
+  
   .primaryButton {
     padding: 0.75rem 1.5rem;
     font-size: 0.875rem;
@@ -331,65 +427,8 @@
     width: 16px;
     height: 16px;
   }
-}
-
-.primaryButton:hover {
-  background-color: rgba(255, 255, 255, 0.9);
-  transform: scale(1.05);
-}
-
-.primaryButtonIcon {
-  margin-left: 0.5rem;
-  transition: transform 0.3s;
-}
-
-.primaryButton:hover .primaryButtonIcon {
-  transform: translateX(0.25rem);
-}
-
-/* Scroll Indicator */
-.scrollIndicator {
-  position: absolute;
-  bottom: 16rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: var(--z-above);
-  cursor: pointer;
-  color: rgba(255, 255, 255, 0.5);
-  transition: all 0.3s ease;
-}
-
-/* Mobile styles for scroll indicator */
-@media (max-width: 768px) {
-  .scrollIndicator {
-    bottom: 12.5rem;
-  }
-}
-
-.scrollIndicator:hover {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.scrollArrow {
-  animation: bounce 2s infinite;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.scrollArrow svg {
-  width: 24px;
-  height: 24px;
-}
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-6px);
-  }
-  60% {
-    transform: translateY(-3px);
+  
+  .contentBackdrop {
+    padding: 1.5rem;
   }
 }
